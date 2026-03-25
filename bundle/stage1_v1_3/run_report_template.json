@@ -1,0 +1,60 @@
+{
+  "protocol_id": "Stage1_v1.3",
+  "evidentiary_status": "exploratory_only",
+  "precommit": {
+    "github_repo": "",
+    "github_commit_hash": "",
+    "commit_time_utc": "",
+    "commit_time_source": "GitHub API commit.committer.date (UTC)"
+  },
+  "runtime": {
+    "run_start_time_utc": "",
+    "run_start_time_source": "system UTC timestamp at execution start"
+  },
+  "audit_checks": {
+    "timestamp_check_commit_before_run": null,
+    "hash_match_prespec": null,
+    "hash_match_data_csv": null,
+    "hash_match_stage1_py": null,
+    "hash_match_env_manifest": null
+  },
+  "sufficiency": {
+    "total_candidates": null,
+    "valid_events": null,
+    "group_a_count": null,
+    "group_b_count": null,
+    "bucket_counts_overall": {},
+    "bucket_counts_by_group": {},
+    "bucket_counts_by_half": {},
+    "exclusions_by_type": {
+      "timestamp_gaps": null,
+      "weekend_gaps": null,
+      "other_anomaly_rules": null
+    },
+    "sufficient_for_testing": null
+  },
+  "atr_gate": {
+    "seed": 42001,
+    "base_permutations": 100000,
+    "boundary_permutations": 1000000,
+    "alpha": 0.01,
+    "p_value": null,
+    "mcse": null,
+    "boundary_rerun_used": null,
+    "gate_pass": null
+  },
+  "nfam_test": {
+    "seed": 42002,
+    "base_permutations": 100000,
+    "boundary_permutations": 1000000,
+    "alpha": 0.05,
+    "median_nfam_group_a": null,
+    "median_nfam_group_b": null,
+    "difference_a_minus_b": null,
+    "p_value": null,
+    "mcse": null,
+    "boundary_rerun_used": null
+  },
+  "terminal_state": "",
+  "notes": ""
+}

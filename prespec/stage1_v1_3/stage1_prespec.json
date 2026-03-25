@@ -1,0 +1,106 @@
+{
+  "protocol_id": "Stage1_v1.3",
+  "protocol_status": "locked_exploratory",
+  "instrument": "EUR/USD",
+  "timeframe": "15-minute bars",
+  "data_source": "Dukascopy",
+  "data_file": "EURUSD_15 Mins_Bid_2019.01.01_2026.03.25.csv",
+  "required_columns": ["timestamp", "open", "high", "low", "close"],
+  "parameters": {
+    "L": 20,
+    "L_ref": 100,
+    "theta_c": 0.30,
+    "alpha": 0.10,
+    "h": 12
+  },
+  "event_definitions": {
+    "compression": "CR_t = (max(high[t-19:t]) - min(low[t-19:t])) / (max(high[t-99:t]) - min(low[t-99:t])); compression_t = (CR_t <= 0.30)",
+    "true_range": "TR_i = max(high_i - low_i, abs(high_i - close_{i-1}), abs(low_i - close_{i-1}))",
+    "atr": "ATR_t = mean(TR over t-19:t)",
+    "breakout": "At t+1: close[t+1] > U_t + 0.1*ATR_t OR close[t+1] < D_t - 0.1*ATR_t, with U_t=max(high[t-19:t]), D_t=min(low[t-19:t])"
+  },
+  "groups": {
+    "A": "compression breakout",
+    "B": "non-compression breakout"
+  },
+  "volatility_control": {
+    "rv": "RV_t = std(log returns over t-19:t)",
+    "cutpoints_source": "events from first half of dataset only",
+    "quantiles": [0.2, 0.4, 0.6, 0.8],
+    "buckets": 5
+  },
+  "event_filtering": {
+    "required_window": "t-99 to t+12 inclusive",
+    "discard_if_any_timestamp_gap_gt_15m": true,
+    "discard_if_any_invalid_bar": true,
+    "invalid_bar_conditions": [
+      "duplicate timestamp",
+      "missing OHLC",
+      "high < low",
+      "open outside [low, high]",
+      "close outside [low, high]"
+    ],
+    "weekend_gaps_treated_same": true
+  },
+  "event_separation": {
+    "global_skip_bars_after_recorded_event": 12
+  },
+  "outcome": {
+    "name": "NFAM",
+    "formula": "abs(close[t+12] - close[t+1]) / ATR_t",
+    "compute_only_after_extraction_complete": true
+  },
+  "validity_gate": {
+    "name": "ATR denominator-coupling gate",
+    "null": "Within volatility buckets, Group A/B labels are exchangeable for ATR_t",
+    "test": "two-sided stratified permutation test",
+    "statistic": "median(ATR_t|A) - median(ATR_t|B)",
+    "alpha": 0.01,
+    "base_permutations": 100000,
+    "boundary_permutations": 1000000,
+    "seed": 42001,
+    "rule": "if p_atr <= 0.01 then invalid_for_inference"
+  },
+  "primary_test": {
+    "test": "two-sided stratified permutation test",
+    "strata": "volatility buckets",
+    "statistic": "median(NFAM|A) - median(NFAM|B)",
+    "alpha": 0.05,
+    "base_permutations": 100000,
+    "boundary_permutations": 1000000,
+    "seed": 42002,
+    "decision_rule": "if p_nfam <= 0.05 then reject_null else fail_to_reject_null"
+  },
+  "mc_boundary_rule": "For each test, compute mcse = sqrt(p*(1-p)/B). If abs(p-alpha_test) <= 2*mcse, rerun once with boundary_permutations and use rerun result.",
+  "terminal_states": [
+    "invalid_non_auditable",
+    "invalid_insufficient_data",
+    "invalid_for_inference",
+    "reject_null",
+    "fail_to_reject_null"
+  ],
+  "state_assignment": {
+    "invalid_non_auditable": "missing precommit proof OR hash mismatch OR commit_time_utc >= run_start_time_utc",
+    "invalid_insufficient_data": "no valid events OR empty A/B group OR test not computable due to insufficiency",
+    "invalid_for_inference": "ATR validity gate computed and p_atr <= 0.01",
+    "reject_null": "eligible and p_nfam <= 0.05",
+    "fail_to_reject_null": "eligible and p_nfam > 0.05"
+  },
+  "attestation": {
+    "mechanism": "public GitHub commit",
+    "required_path": "prespec/stage1_v1_3/",
+    "required_check": "commit_time_utc < run_start_time_utc",
+    "timestamp_timezone": "UTC",
+    "trust_boundary": "GitHub metadata accepted as attestation source"
+  },
+  "reproducibility": {
+    "required_hashes": [
+      "stage1_prespec.json",
+      "EURUSD_15 Mins_Bid_2019.01.01_2026.03.25.csv",
+      "stage1.py",
+      "stage1_env.txt"
+    ],
+    "required_environment_manifest": "stage1_env.txt"
+  },
+  "evidentiary_status": "exploratory_only"
+}
