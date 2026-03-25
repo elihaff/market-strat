@@ -1,0 +1,88 @@
+{
+  "protocol_id": "Stage1_v1.3",
+  "evidentiary_status": "exploratory_only",
+  "precommit": {
+    "github_repo": "elihaff/market-strat",
+    "github_commit_hash": "890b393c28249a669eb418b2c431c1893d1ffd02",
+    "commit_time_utc": "2026-03-25T17:08:06Z",
+    "commit_time_source": "GitHub API commit.committer.date (UTC)"
+  },
+  "runtime": {
+    "run_start_time_utc": "2026-03-25T17:19:41Z",
+    "run_start_time_source": "system UTC timestamp at execution start"
+  },
+  "audit_checks": {
+    "timestamp_check_commit_before_run": true,
+    "hash_match_prespec": true,
+    "hash_match_data_csv": true,
+    "hash_match_stage1_py": true,
+    "hash_match_env_manifest": true
+  },
+  "sufficiency": {
+    "total_candidates": 17423,
+    "valid_events": 5462,
+    "group_a_count": 2549,
+    "group_b_count": 2913,
+    "bucket_counts_overall": {
+      "bucket_1": 957,
+      "bucket_2": 1059,
+      "bucket_3": 1104,
+      "bucket_4": 1131,
+      "bucket_5": 1211
+    },
+    "bucket_counts_by_group": {
+      "group_A_bucket_1": 809,
+      "group_A_bucket_2": 707,
+      "group_A_bucket_3": 517,
+      "group_A_bucket_4": 331,
+      "group_A_bucket_5": 185,
+      "group_B_bucket_1": 148,
+      "group_B_bucket_2": 352,
+      "group_B_bucket_3": 587,
+      "group_B_bucket_4": 800,
+      "group_B_bucket_5": 1026
+    },
+    "bucket_counts_by_half": {
+      "first_half_bucket_1": 540,
+      "first_half_bucket_2": 539,
+      "first_half_bucket_3": 540,
+      "first_half_bucket_4": 539,
+      "first_half_bucket_5": 540,
+      "second_half_bucket_1": 417,
+      "second_half_bucket_2": 520,
+      "second_half_bucket_3": 564,
+      "second_half_bucket_4": 592,
+      "second_half_bucket_5": 671
+    },
+    "exclusions_by_type": {
+      "timestamp_gaps": 385,
+      "weekend_gaps": 3337,
+      "other_anomaly_rules": 12
+    },
+    "sufficient_for_testing": true
+  },
+  "atr_gate": {
+    "seed": 42001,
+    "base_permutations": 100000,
+    "boundary_permutations": 1000000,
+    "alpha": 0.01,
+    "p_value": 9.99990000099999e-06,
+    "mcse": 9.99990000099999e-06,
+    "boundary_rerun_used": false,
+    "gate_pass": false
+  },
+  "nfam_test": {
+    "seed": 42002,
+    "base_permutations": 100000,
+    "boundary_permutations": 1000000,
+    "alpha": 0.05,
+    "median_nfam_group_a": null,
+    "median_nfam_group_b": null,
+    "difference_a_minus_b": null,
+    "p_value": null,
+    "mcse": null,
+    "boundary_rerun_used": null
+  },
+  "terminal_state": "invalid_for_inference",
+  "notes": ""
+}
